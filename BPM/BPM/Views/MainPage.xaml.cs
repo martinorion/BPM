@@ -5,7 +5,7 @@ namespace BPM
 {
     public partial class MainPage : ContentPage
     {
-        private readonly MainViewModel viewModel;
+        
 
         public MainPage()
         {
