@@ -1,30 +1,59 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:viewmodel="clr-namespace:BPM.ViewModel"
-             x:Class="BPM.MainPage">
+             x:Class="BPM.MainPage" BackgroundColor="Black">
 
     <ContentPage.BindingContext>
         <viewmodel:MainViewModel/>
-    </ContentPage.BindingContext>
+      </ContentPage.BindingContext>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="250"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Label 
-            x:Name="bpmLabel"
+
+        <Label
             Grid.Row="1"
-            Text="{Binding BPM, StringFormat='{0:N0}'}"
+            Text="{Binding Seconds}" TextColor="White"
             HorizontalOptions="Center"
-            FontSize="Header"/>
+            FontSize="50"
+           />
+
         <Button
             Grid.Row="2"
+            WidthRequest="200"
+            Text="Start" TextColor="White"
+            HorizontalOptions="Center"
+            Command="{Binding StartCommand}"
+            />
+
+        <Button
+            Grid.Row="3"
+            Text="Reset" TextColor="White"
             HorizontalOptions="Center"
             WidthRequest="200"
-            Command="{Binding TapCommand}"
-            Text="TAP"/>
+            Command="{Binding RestartCommand}"
+            />
+
+        <Button
+            Grid.Row="4"
+            Text="Lap" TextColor="White"
+            HorizontalOptions="Center"
+            WidthRequest="200"
+            Command="{Binding LapCommand}"
+            />
+
+        <ListView
+            Grid.Row="5"
+            ItemsSource="{Binding Laps}"
+            />
+
     </Grid>
+
 </ContentPage>

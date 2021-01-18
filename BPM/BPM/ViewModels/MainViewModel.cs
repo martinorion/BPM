@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
+using System.Threading;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -11,45 +9,85 @@ namespace BPM.ViewModel
 {
     class MainViewModel : INotifyPropertyChanged
     {
-        private readonly List<DateTime> tapTimes;
-        private double bpm;
-
-        public MainViewModel()
+        private int seconds;
+        public int Seconds
         {
-            tapTimes = new List<DateTime>();
-            TapCommand = new Command(Tap);
-        }
+            get => seconds;
 
-        public double BPM
-        {
-            get => bpm;
             private set
             {
-                if (Equals(bpm, value)) return;
-                bpm = value;
+                seconds = value;
                 OnPropertyChanged();
             }
         }
+        private string moment;
+        public string Moment
+        {
+            get => moment;
 
-        public ICommand TapCommand { get; }
+            private set
+            {
+                moment = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public ICommand StartCommand { get; }
+        public ICommand RestartCommand { get; }
+        public ICommand LapCommand { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private readonly Thread countingThread;
 
-
-        private void Tap()
+        public MainViewModel()
         {
-            tapTimes.Add(DateTime.Now);
-            if (tapTimes.Count > 2)
+            seconds = 0;
+            moment = "Start";
+            Laps = new ObservableCollection<int>();
+
+            StartCommand = new Command(Start);
+            RestartCommand = new Command(Restart);
+            LapCommand = new Command(Lap);
+
+            var starter = new ThreadStart(Tick);
+            countingThread = new Thread(starter);
+            countingThread.Start();
+
+        }
+
+        private void Tick()
+        {
+            while (true)
             {
-                var oldest = tapTimes.First();
-                var newest = tapTimes.Last();
-                var duration = newest - oldest;
-                var average = new TimeSpan(duration.Ticks / tapTimes.Count);
-                BPM = 60 / average.TotalSeconds;
+                if (Moment != "Stop")
+                    continue;
+
+                Seconds++;
+                Thread.Sleep(1000);
             }
+        }
+
+        private void Start()
+        {
+            Moment = Moment == "Start" ? "Stop" : "Start";
+        }
+
+        private void Restart()
+        {
+            Moment = "Start";
+            Seconds = 0;
+            Laps.Clear();
+        }
+        public ObservableCollection<int> Laps { get; }
+        private void Lap()
+        {
+            Laps.Add(Seconds);
+        }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
