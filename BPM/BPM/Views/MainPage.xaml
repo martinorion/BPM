@@ -13,17 +13,14 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Label
+        <Label 
             Grid.Row="1"
-            Text="{Binding Seconds}" TextColor="White"
-            HorizontalOptions="Center"
-            FontSize="50"
-           />
+            Text="{Binding lblStopWatch}" 
+            
+            />
 
         <Button
             Grid.Row="2"
@@ -41,19 +38,7 @@
             Command="{Binding RestartCommand}"
             />
 
-        <Button
-            Grid.Row="4"
-            Text="Lap" TextColor="White"
-            HorizontalOptions="Center"
-            WidthRequest="200"
-            Command="{Binding LapCommand}"
-            />
-
-        <ListView
-            Grid.Row="5"
-            ItemsSource="{Binding Laps}"
-            />
-
+      
     </Grid>
 
 </ContentPage>
